@@ -1,0 +1,11 @@
+[[worker]]
+
+[worker.config]
+id = "arcade-orb-toolkit-worker"
+enabled = true
+timeout = 30
+retries = 3
+secret = "dev" # Removed secret definition
+
+[worker.local_source]
+packages = ["arcade_orb_toolkit"]

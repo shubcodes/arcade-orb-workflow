@@ -1,0 +1,46 @@
+{
+  "customers": [
+    {
+      "id": "cust_llu4b7j3t",
+      "name": "shubllc",
+      "email": "rsimmons@harding-taylor.net",
+      "address": {},
+      "created_at": "2025-04-16T21:22:07.411Z"
+    }
+  ],
+  "plans": [
+    {
+      "id": "plan_basic_monthly",
+      "name": "Basic Monthly",
+      "base_price": 1000,
+      "price_per_user": 500
+    },
+    {
+      "id": "plan_pro_monthly",
+      "name": "Pro Monthly",
+      "base_price": 2500,
+      "price_per_user": 1000
+    },
+    {
+      "id": "plan_enterprise_yearly",
+      "name": "Enterprise Yearly",
+      "base_price": 250000,
+      "price_per_user": 8000
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "sub_p4l7ubl6k",
+      "customer_id": "cust_llu4b7j3t",
+      "plan_id": "plan_basic_monthly",
+      "user_count": 44,
+      "addons": [
+        "priority_onboarding",
+        "premium_support"
+      ],
+      "status": "active",
+      "created_at": "2025-04-16T21:22:07.434Z"
+    }
+  ],
+  "invoices": []
+}

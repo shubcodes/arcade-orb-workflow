@@ -1,0 +1,4 @@
+arcade-sdk>=0.3.0
+google-auth>=2.16.0
+google-api-python-client>=2.100.0
+python-dotenv>=0.19.0 

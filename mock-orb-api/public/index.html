@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Orb Billing Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; }
+        .table-container { margin-top: 20px; }
+        #loading { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Mock Orb Billing Dashboard</h1>
+
+        <div id="loading" class="alert alert-info">Loading data...</div>
+        <div id="error" class="alert alert-danger" style="display: none;"></div>
+
+        <div class="row">
+            <div class="col-md-6 table-container">
+                <h2>Customers</h2>
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customers-table"></tbody>
+                </table>
+            </div>
+            <div class="col-md-6 table-container">
+                <h2>Subscriptions</h2>
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer ID</th>
+                            <th>Plan ID</th>
+                            <th>Status</th>
+                            <th>Users</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subscriptions-table"></tbody>
+                </table>
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-md-12 table-container">
+                <h2>Plans</h2>
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Base Price</th>
+                            <th>Price Per User</th>
+                        </tr>
+                    </thead>
+                    <tbody id="plans-table"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3201'; // Changed port to 3201
+        const customersTable = document.getElementById('customers-table');
+        const subscriptionsTable = document.getElementById('subscriptions-table');
+        const plansTable = document.getElementById('plans-table');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+
+        async function fetchData() {
+            loadingDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+            customersTable.innerHTML = '';
+            subscriptionsTable.innerHTML = '';
+            plansTable.innerHTML = '';
+
+            try {
+                const [customersRes, subscriptionsRes, plansRes] = await Promise.all([
+                    fetch(`${API_URL}/customers`),
+                    fetch(`${API_URL}/subscriptions`),
+                    fetch(`${API_URL}/plans`)
+                ]);
+
+                if (!customersRes.ok || !subscriptionsRes.ok || !plansRes.ok) {
+                   throw new Error(`HTTP error! Status: ${customersRes.status}, ${subscriptionsRes.status}, ${plansRes.status}`);
+                }
+
+                const customers = await customersRes.json();
+                const subscriptions = await subscriptionsRes.json();
+                const plans = await plansRes.json();
+
+                // Populate Customers Table
+                customers.forEach(customer => {
+                    const row = customersTable.insertRow();
+                    row.innerHTML = `<td>${customer.id}</td><td>${customer.name}</td><td>${customer.email}</td>`;
+                });
+
+                // Populate Subscriptions Table
+                subscriptions.forEach(sub => {
+                    const row = subscriptionsTable.insertRow();
+                    row.innerHTML = `<td>${sub.id}</td><td>${sub.customer_id}</td><td>${sub.plan_id}</td><td>${sub.status}</td><td>${sub.user_count}</td>`;
+                });
+
+                 // Populate Plans Table
+                plans.forEach(plan => {
+                    const row = plansTable.insertRow();
+                    row.innerHTML = `<td>${plan.id}</td><td>${plan.name}</td><td>${plan.base_price / 100}</td><td>${plan.price_per_user / 100}</td>`; // Assuming price is in cents
+                });
+
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                errorDiv.textContent = `Failed to load data: ${error.message}`;
+                errorDiv.style.display = 'block';
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        // Fetch data initially and then every 5 seconds
+        fetchData();
+        setInterval(fetchData, 5000); // Refresh every 5 seconds
+    </script>
+</body>
+</html>

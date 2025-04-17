@@ -1,0 +1,10 @@
+[[worker]]
+
+[worker.config]
+id = "demo-worker"
+enabled = true
+timeout = 30
+retries = 3
+secret = "9b93c48f266b93a46dc0881c29826943"
+[worker.local_source]
+packages = [ "./gmailer",]

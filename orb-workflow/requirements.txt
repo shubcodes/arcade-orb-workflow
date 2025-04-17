@@ -1,0 +1,9 @@
+arcadepy>=0.7.0
+openai>=1.0.0
+python-dotenv>=1.0.0
+google-api-python-client>=2.0.0
+google-auth>=2.0.0
+google-auth-oauthlib>=1.0.0
+PyPDF2>=3.0.0  # For PDF text extraction
+langchain>=0.0.200  # Optional, for future integration
+tenacity>=8.0.0  # For retry logic 

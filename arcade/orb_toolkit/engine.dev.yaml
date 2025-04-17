@@ -1,0 +1,58 @@
+# Minimal Arcade Engine Config for Local Development
+
+# API Settings
+api:
+  development: true # Enables dev mode, defaults worker secret to 'dev' if not set by env
+  http:
+    host: 127.0.0.1 # Or 0.0.0.0 if needed
+    port: 9099 # Default engine port
+
+# Tools Configuration - Pointing to the local worker started by `arcade dev`
+tools:
+  directors:
+    - id: default
+      enabled: true
+      workers:
+        - id: local_orb_worker # Give our specific worker an ID
+          enabled: true
+          http:
+            uri: 'http://127.0.0.1:8002' # Default worker port
+            # Secret the Engine uses to authenticate WITH the worker.
+            # MUST match ARCADE_WORKER_SECRET env var set when running `arcade dev`
+            secret: ${env:ARCADE_WORKER_SECRET} 
+            timeout: 30 # Optional: default is 30s
+            retry: 3 # Optional: default is 3
+
+# LLM Configuration (Using OpenAI)
+llm:
+  models:
+    - id: default-openai # Give it an ID
+      openai:
+        # base_url: https://api.openai.com/v1 # Optional: defaults to OpenAI
+        model: gpt-4o # Or another model like gpt-3.5-turbo
+        api_key: ${env:OPENAI_API_KEY} # Reference the env variable
+        # Optional: Add default params if needed
+        # default_params:
+        #   temperature: 0.7
+
+# Storage Configuration (Using defaults for local dev)
+storage:
+  in_memory: {}
+
+# Cache Configuration (Using defaults for local dev)
+cache:
+  in_memory: {}
+
+# Telemetry Configuration (Using defaults for local dev)
+telemetry:
+  environment: local
+  logging:
+    level: info # Or debug for more verbose output
+    encoding: console
+
+# Security Configuration (Using defaults - relies on engine.env for ROOT_KEY_1)
+# security:
+#   root_keys:
+#     - id: key1
+#       default: true
+#       value: ${env:ROOT_KEY_1} 

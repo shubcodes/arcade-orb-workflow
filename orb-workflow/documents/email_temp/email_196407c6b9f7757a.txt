@@ -1,0 +1,17 @@
+Subject: 
+From: Shubhashish Argha <sargha@umich.edu>
+Date: Wed, 16 Apr 2025 14:23:24 -0700
+Email ID: 196407c6b9f7757a
+Has Invoice Attachments: True
+
+--- EMAIL BODY ---
+
+kfhdskfhsfsdfs fsd fsdfsd fds fsd fsd fsdf sdfsdfnklsdfsd f sdf sdf sdf sdf sdf sdf sdf sdfsd fs dfs fs fds fsd fds fsd fs fsd f
+
+--- ATTACHMENTS ---
+
+Attachment: sales_order_1.txt (text/plain) - Downloaded Possibly Invoice
+  Size: 76 bytes
+  Saved to: /Users/shub/Documents/GitHub/arcade-orb-2/orb-workflow/documents/email_temp/attachments_196407c6b9f7757a/sales_order_1.txt
+  Analysis: True, Confidence: 0.8
+  Reason: The document contains information related to a business subscription, including a company name ('Another Corp Inc.'), an email address, a plan name ('Basic'), and the number of users (5). Although it lacks monetary amounts, due dates, and explicit terms like 'invoice' or 'bill', the presence of subscription details indicates it is likely related to billing or invoicing. The file name 'sales_order_1.txt' also suggests a business transaction context.

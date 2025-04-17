@@ -1,0 +1,11 @@
+Subject: Order
+From: Ben Sabrin <ben@arcade.dev>
+Date: Wed, 16 Apr 2025 14:23:39 -0700
+Email ID: 196407c9fc4d0162
+Has Invoice Attachments: False
+
+--- EMAIL BODY ---
+
+Hi I have a new deal Company Apple Plan enterprise Amount 1,000,001 Date 4/16/25 Ben Sabrin Builder ben@arcade.dev 415-404-2323
+
+--- ATTACHMENTS ---

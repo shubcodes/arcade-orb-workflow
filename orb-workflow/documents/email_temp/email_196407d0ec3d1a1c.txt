@@ -1,0 +1,15 @@
+Subject: Invoice #1337
+From: Nate Barbettini <nate@arcade.dev>
+Date: Wed, 16 Apr 2025 14:24:08 -0700
+Email ID: 196407d0ec3d1a1c
+Has Invoice Attachments: True
+
+--- EMAIL BODY ---
+
+See attached
+
+--- ATTACHMENTS ---
+
+Attachment: Hooli invoice.rtf (text/rtf) - Downloaded Possibly Invoice
+  Size: 562 bytes
+  Saved to: /Users/shub/Documents/GitHub/arcade-orb-2/orb-workflow/documents/email_temp/attachments_196407d0ec3d1a1c/Hooli invoice.rtf
