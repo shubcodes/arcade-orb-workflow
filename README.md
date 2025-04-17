@@ -39,23 +39,39 @@ The system operates based on a main asynchronous loop that discovers new items a
     *   Each pipeline instance maintains its own state, persisted via LangGraph's `MemorySaver` checkpointer, keyed by the unique `thread_id`.
     *   **Entry Point:** `process_document`
     *   **Nodes:**
-        *   `process_document`: (Uses `DocumentProcessorAgent`) Reads the document/attachment content. Calls an LLM (Fireworks AI) to extract structured data (customer name, email, plan, seats, addons). Updates state with `extracted_data`.
+        *   `process_document`: (Uses `DocumentProcessorAgent`)
+            *   Reads the document/attachment content.
+            *   Calls an LLM (Fireworks AI) to extract structured data (customer name, email, plan, seats, addons).
+            *   Updates state with `extracted_data`.
         *   `human_verification`: (Uses `SlackHumanVerificationAgent`)
             *   Sends `extracted_data` to a configured Slack channel using Arcade `Slack.SendMessageToChannel` for the initial message. Stores the message `ts` and `channel_id` in the state.
             *   Enters a loop waiting for user replies *in the thread* using the custom `SlackHelper` (`get_thread_replies` method, which uses Arcade auth + `slack_sdk`'s `conversations.replies`).
-            *   Processes replies: Checks for approval keywords. If not approved, uses LLM to interpret change requests against the *current* data state.
+            *   Processes replies:
+                *   Checks for approval keywords.
+                *   If not approved, uses LLM to interpret change requests against the *current* data state.
             *   If changes are made by the LLM, sends the updated data back to the *same Slack thread* using `SlackHelper` (`send_reply_in_thread` method) and waits for further replies (loops within the agent).
             *   If the user request is unclear, sends a clarification message to the thread (using `SlackHelper`) and waits again.
             *   Continues until explicit approval is received or retries/timeout are exceeded.
-            *   On success, updates state with `verified_data`, `is_verified=True`. On failure/timeout, sets `is_verified=False` and `status='error'`.
-        *   `validate_data_for_billing`: (Uses `BillingConfiguratorAgent.validate_data`) Checks if the `verified_data` contains the required fields (customer name, email, mappable plan type). Sets `is_valid_for_billing` and `validation_error` in the state.
-        *   `inform_user_of_validation_error`: (Conditional) If validation fails (`is_valid_for_billing == False`), sends a message detailing the missing fields back to the original Slack thread using `SlackHelper`. Resets state (`is_verified=None`, `verified_data=None`, etc.) to loop back to `human_verification`.
-        *   `configure_billing`: (Conditional) If validation passes (`is_valid_for_billing == True`), uses `BillingConfiguratorAgent` to:
-            *   Map plan names to IDs.
-            *   Call the custom Arcade Worker tools `CreateCustomer` and `CreateSubscription` (simulating Orb API calls) using the `verified_data`.
-            *   Updates state with `customer_id`, `subscription_id`, and sets `status='success'` or `status='error'`.
-        *   `mark_document_processed`: (Uses `DocumentWatcherAgent` / `EmailWatcherAgent`) Marks the original file or email ID as processed based on the `source` in the state. This prevents reprocessing. Returns `{"status": "completed"}` to satisfy LangGraph state update requirement before ending.
-    *   **Edges:** Conditional logic routes the flow based on node outcomes (e.g., extraction success, verification success, validation success, billing success/failure). Includes the loop from validation failure back to human verification.
+            *   On success, updates state with `verified_data`, `is_verified=True`.
+            *   On failure/timeout, sets `is_verified=False` and `status='error'`.
+        *   `validate_data_for_billing`: (Uses `BillingConfiguratorAgent.validate_data`)
+            *   Checks if the `verified_data` contains the required fields (customer name, email, mappable plan type).
+            *   Sets `is_valid_for_billing` and `validation_error` in the state.
+        *   `inform_user_of_validation_error`: (Conditional)
+            *   If validation fails (`is_valid_for_billing == False`), sends a message detailing the missing fields back to the original Slack thread using `SlackHelper`.
+            *   Resets state (`is_verified=None`, `verified_data=None`, etc.) to loop back to `human_verification`.
+        *   `configure_billing`: (Conditional)
+            *   If validation passes (`is_valid_for_billing == True`), uses `BillingConfiguratorAgent` to:
+                *   Map plan names to IDs.
+                *   Call the custom Arcade Worker tools `CreateCustomer` and `CreateSubscription` (simulating Orb API calls) using the `verified_data`.
+                *   Updates state with `customer_id`, `subscription_id`, and sets `status='success'` or `status='error'`.
+        *   `mark_document_processed`: (Uses `DocumentWatcherAgent` / `EmailWatcherAgent`)
+            *   Marks the original file or email ID as processed based on the `source` in the state.
+            *   Prevents reprocessing.
+            *   Returns `{"status": "completed"}` to satisfy LangGraph state update requirement before ending.
+    *   **Edges:**
+        *   Conditional logic routes the flow based on node outcomes (e.g., extraction success, verification success, validation success, billing success/failure).
+        *   Includes the loop from validation failure back to human verification.
 
 ## Architecture Diagram
 
